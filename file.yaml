@@ -18,6 +18,6 @@
       path: /etc/foo
       state: directory
       recurse: yes
-      owner: foo
-      group: foo
+      owner: ec2-user
+      group: ec2-user
 
