@@ -13,4 +13,16 @@
     - tom
     - lisa
     - kate
+
+  - name: Ensure group "somegroup" exists
+    ansible.builtin.group:
+      name: "{{ item }}"
+      state: present
+    with_items:
+    - somegroup
+    - sales
+    - marketing
+    - billing
+
+    
    
