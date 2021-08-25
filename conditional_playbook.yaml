@@ -1,0 +1,35 @@
+---  #Number 1 playbook
+- name: Conditional Playbook
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks: 
+  #- name: Install package  Asagiya eklediklerimizi run edebilmek icin burayi comment e aldik
+  #  package: 
+  #    name: telnet
+  #    state: present
+  
+
+  - name: Information
+    ansible.builtin.debug:
+      var: ansible_facts['distribution'] #Amazonun mu Wondowsn mu provideri gormek icin
+                         #['kernel'] #kernel versionlarini gormek icin makinelerin
+                         #['nodename'] #hostanme i gormek icin
+                         #['os_family'] #hangi os redhat  mi debian vs gormek icin
+
+  - name: Install webserver CentOS
+    when: ansible_facts['distribution'] == "Amazon"
+    ansible.builtin.package:
+      name: httpd
+      state: present
+                         
+
+  - name: Install webserver Ubuntu
+    when: ansible_facts['distribution'] == "Ubuntu"
+    ansible.builtin.package:
+      name: apache2
+      state: present
+
+  # - name: restart Ubuntu 
+  #   when: ansible_facts['distribution'] == "Ubuntu"
+  #   ansible.builtin.command: "reboot"
