@@ -3,8 +3,9 @@
   hosts: all
   become: true
   become_method: sudo
+  gather_facts: yes   #by deafult it is always yes, otherwise gonna break code.
   tasks: 
-  #- name: Install package  Asagiya eklediklerimizi run edebilmek icin burayi comment e aldik
+  #- name: Install package  #Asagiya eklediklerimizi run edebilmek icin burayi comment e aldik
   #  package: 
   #    name: telnet
   #    state: present
@@ -16,20 +17,41 @@
                          #['kernel'] #kernel versionlarini gormek icin makinelerin
                          #['nodename'] #hostanme i gormek icin
                          #['os_family'] #hangi os redhat  mi debian vs gormek icin
+                         #['distribution_version'] verionu gosterir. 
 
-  - name: Install webserver CentOS
-    when: ansible_facts['distribution'] == "Amazon"
+  - name: Install webserver Amazon
+    when: ansible_facts['distribution'] == "Amazon" #and ansible_facts['distribution_version'] == "2" yani 2 tane condition da yapabiliriz ayni anda
     ansible.builtin.package:
       name: httpd
       state: present
+    notify: Restart Webserver Amazon
                          
 
   - name: Install webserver Ubuntu
-    when: ansible_facts['distribution'] == "Ubuntu"
+    when: ansible_facts['distribution'] == "Ubuntu" #and ansible_facts['distribution_version'] == "16.04" yani 2 tane condition da yapabiliriz ayni anda
     ansible.builtin.package:
       name: apache2
       state: present
+    notify: Restart webserver Ubuntu
 
   # - name: restart Ubuntu 
   #   when: ansible_facts['distribution'] == "Ubuntu"
   #   ansible.builtin.command: "reboot"
+
+
+
+  handlers:
+  - name: Restart Webserver Amazon
+    when: ansible_facts['distribution']  ==  "Amazon"
+    systemd:
+      name: httpd
+      state: restarted
+
+  - name: restart Ubuntu 
+    when: ansible_facts['distribution'] == "Ubuntu"
+    systemd:
+      name: apache2
+      state: restarted
+
+
+
