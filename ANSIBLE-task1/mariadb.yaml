@@ -1,0 +1,42 @@
+---
+- name: MariaDB setup
+  hosts: all
+  become: yes
+  gather_facts: true
+  tasks:
+  - name: Install MariaDB service
+    yum:
+      name: MariaDB-server
+      state: present
+
+  - name: start and enable MariaDB Service
+    service:
+      name: mariadb
+      state: started
+      enabled: yes
+
+  - name: Create a new database with name "MyfirstDB"
+    mysql_db: 
+      name: myFirstDB
+      state: present
+
+  - name: Install Mariadb service  
+    yum: 
+      name: mariadb - server  
+      state: present 
+  
+  - name: Install Python MySQL module  
+    yum: 
+      name: MySQL - python  
+      state: present 
+  
+  - name: Start and Enable Mariadb service  
+    service:   
+      name: mariadb  
+      state: started  
+  enabled: yes 
+  
+  #- name: Create a new database with name "myFirstDB"  
+    #mysql_db: 
+      #name: myFirstDB  
+      #state: present
