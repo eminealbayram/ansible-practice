@@ -1,42 +1,17 @@
 ---
-- name: MariaDB setup
+- name: MariaDB Installation
   hosts: all
   become: yes
-  gather_facts: true
+  become_method: sudo
   tasks:
-  - name: Install MariaDB service
-    yum:
-      name: MariaDB-server
-      state: present
+  - name: Install MariaDB repository
+    apt_repository: repo='deb http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.0/ubuntu trusty main' state=present
+  - name: Add repository key to the system
+    apt_key: keyserver=keyserver.ubuntu.com id=0xcbcb082a1bb943db
+  - name: Install MariaDB Server
+    apt: name=mariadb-server state=latest update_cache=yes
+  - name: Restart MariaDB 
+    service: name=mysql state=restarted
+  - name: Install MariaDB Client 
+    apt: name=mariadb-client state=latest
 
-  - name: start and enable MariaDB Service
-    service:
-      name: mariadb
-      state: started
-      enabled: yes
-
-  - name: Create a new database with name "MyfirstDB"
-    mysql_db: 
-      name: myFirstDB
-      state: present
-
-  - name: Install Mariadb service  
-    yum: 
-      name: mariadb - server  
-      state: present 
-  
-  - name: Install Python MySQL module  
-    yum: 
-      name: MySQL - python  
-      state: present 
-  
-  - name: Start and Enable Mariadb service  
-    service:   
-      name: mariadb  
-      state: started  
-  enabled: yes 
-  
-  #- name: Create a new database with name "myFirstDB"  
-    #mysql_db: 
-      #name: myFirstDB  
-      #state: present
