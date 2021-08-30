@@ -7,6 +7,7 @@
   - name: Add the users
     ansible.builtin.user:
       name: "{{ item }}"
+      group: devops
       generate_ssh_key: yes
       ssh_key_bits: 2048
       ssh_key_file: .ssh/id_rsa
@@ -16,6 +17,7 @@
     - lisa
     - katty
     - tom
+    
   
 
   - name: Download url for Bob
@@ -48,13 +50,7 @@
       url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv
       dest: /home/tom
 
-  - name: Create a group with users as members 
-    community.aws.iam_group:
+  - name: Ensure group "devops" exists
+    ansible.builtin.group:
       name: devops
-      users:
-        - Bob
-        - ben
-        - lisa
-        - katty
-        - tom
       state: present
