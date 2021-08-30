@@ -1,10 +1,13 @@
 ---
-- name: task1
+- name: task2
   hosts: all
   become: true
   become_method: sudo
   tasks:
   - name: Add the users
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu" 
+    - ansible_facts['distribution_version'] == "16.04"
     ansible.builtin.user:
       name: "{{ item }}"
       group: devops
@@ -17,40 +20,13 @@
     - lisa
     - katty
     - tom
-    
-  
-
-  - name: Download url for Bob
-    ignore_errors: true
-    ansible.builtin.get_url:
-      url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv
-      dest: /home/Bob
-
-  - name: Download url for ben
-    ignore_errors: true
-    ansible.builtin.get_url:
-      url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv
-      dest: /home/ben
-
-  - name: Download url for lisa
-    ignore_errors: true
-    ansible.builtin.get_url:
-      url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv
-      dest: /home/lisa
-
-  - name: Download url for katty
-    ignore_errors: true
-    ansible.builtin.get_url:
-      url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv
-      dest: /home/katty
-  
-  - name: Download url for tom
-    ignore_errors: true
-    ansible.builtin.get_url:
-      url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv
-      dest: /home/tom
 
   - name: Ensure group "devops" exists
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu" 
+    - ansible_facts['distribution_version'] == "16.04"
     ansible.builtin.group:
       name: devops
       state: present
+
+  

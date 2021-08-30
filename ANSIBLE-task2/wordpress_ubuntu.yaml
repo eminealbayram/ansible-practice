@@ -3,24 +3,26 @@
   hosts: all
   become: true
   become_method: sudo
+  vars:
+    wordpress_version: "4.0.32"
+    php_version: "5.4.16"
   tasks: 
   - name: Information
-    ansible.builtin.debug:
-      var: ansible_facts['distribution_version']
-
-  tasks:
-  - name: Install prerequisites 
     when: 
     - ansible_facts['distribution'] == "Ubuntu"
     - ansible_facts['distribution_version'] == "16.04"
-    package:
-      name: "{{ item }}"
+    ansible.builtin.debug:
+      var: ansible_facts['distribution_version']
+
+  - name: Installing Telnet
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_version'] == "16.04"
+    ansible.builtin.package:
+      name: telnet
       state: present
-    with_items:
-    - apache2
-    - php-5.4.16
-    - php-mysql-5.4.16
-    notify: Start webserver
+    
+   
 
   - name: Get wordpress 
     when: 
@@ -49,6 +51,9 @@
     ignore_errors: true
 
   - name: Copy file with owner and permissions
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_version'] == "16.04"
     ansible.builtin.copy:
       src: testfile
       dest: /etc/testfile.conf
