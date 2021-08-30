@@ -53,6 +53,9 @@
     ignore_errors: true
 
   - name: Copy file with owner and permissions
+    when: 
+    - ansible_facts['distribution'] == "Amazon"
+    - ansible_facts['distribution_version'] == "2"
     ansible.builtin.copy:
       src: testfile
       dest: /etc/testfile.conf
