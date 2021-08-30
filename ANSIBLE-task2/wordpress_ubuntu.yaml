@@ -21,9 +21,16 @@
     ansible.builtin.package:
       name: telnet
       state: present
-    
-   
 
+  - name: Installing apache2
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu"
+    - ansible_facts['distribution_version'] == "16.04"
+    ansible.builtin.package:
+      name: apache2
+      state: present
+    
+    
   - name: Get wordpress 
     when: 
     - ansible_facts['distribution'] == "Ubuntu"
@@ -33,28 +40,4 @@
       dest: /tmp/wordpress-{{ wordpress_version }}.tar.gz
       mode: '0440'
 
-
-  - name: Unzip Wordpress
-    when: 
-    - ansible_facts['distribution'] == "Ubuntu"
-    - ansible_facts['distribution_version'] == "16.04"
-    unarchive:
-      src: /tmp/wordpress-{{ wordpress_version }}.tar.gz
-      dest: /var/www/html/
-      remote_src: true
-
-  - name: Move wordpress
-    when: 
-    - ansible_facts['distribution'] == "Ubuntu"
-    - ansible_facts['distribution_version'] == "16.04"
-    shell: "cp -r  /var/www/html/wordpress/*   /var/www/html || exit 0"
-    ignore_errors: true
-
-  - name: Copy file with owner and permissions
-    when: 
-    - ansible_facts['distribution'] == "Ubuntu"
-    - ansible_facts['distribution_version'] == "16.04"
-    ansible.builtin.copy:
-      src: testfile
-      dest: /etc/testfile.conf
-      mode: '0644'
+ 
